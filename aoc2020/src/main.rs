@@ -1,4 +1,5 @@
-extern crate aoclib;
+pub mod problems;
+pub mod aoclib;
 
 use std::env;
 
@@ -17,8 +18,8 @@ fn main() {
                 // Example problem (problem from last year!)
                 Ok(0) => {
                     let filename = String::from("inputs/00.txt");
-                    let result_001 = aoclib::problem_001(filename.clone());
-                    let result_002 = aoclib::problem_002(filename.clone());
+                    let result_001 = problems::problem_001(filename.clone());
+                    let result_002 = problems::problem_002(filename.clone());
                     println!("Result 0; 1: {}", result_001);
                     println!("Result 0; 2: {}", result_002);            
                 },

@@ -5,10 +5,6 @@ authors = ["Tyler Park <tyler.park@fortemtech.com>"]
 
 [dependencies]
 
-[lib]
-name = "aoclib"
-path = "src/lib.rs"
-
 [[bin]]
 name = "main"
 path = "src/main.rs"
