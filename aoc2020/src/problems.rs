@@ -56,3 +56,40 @@ pub fn problem_002(input_file: String) -> u32 {
         .sum()
     ;
 }
+
+/**
+ * @brief Problem #01, part 1
+ * @details Before you leave, the Elves in accounting just need you to fix 
+ *  your expense report (your puzzle input); apparently, something isn't 
+ *  quite adding up. 
+ * Specifically, they need you to find the two entries that sum to 2020 and 
+ *  then multiply those two numbers together.
+ */
+pub fn problem_011(input_file: String) -> u32 {
+    let input: Vec<u32> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file")
+        .into_iter()
+        .map(|x| x.parse::<u32>().unwrap())
+        .collect()
+    ;
+    let entry = aoclib::naive_find_sum_equal_to(input, 2020).unwrap();
+    let result = entry.0 * entry.1;
+    return result;
+}
+
+/**
+ * @brief Problem #01, part 2
+ * @details The Elves in accounting are thankful for your help; one of them 
+ *  even offers you a starfish coin they had left over from a past vacation. 
+ *  They offer you a second one if you can find three numbers in your 
+ *  expense report that meet the same criteria.
+ */
+pub fn problem_012(input_file: String) -> u32 {
+    let input: Vec<u32> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file")
+        .into_iter()
+        .map(|x| x.parse::<u32>().unwrap())
+        .collect()
+    ;
+    return aoclib::find_sum_equal_to(input, 3, 2020).unwrap();
+}
