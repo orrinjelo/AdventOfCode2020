@@ -3,6 +3,7 @@ use std::io;
 use std::io::{BufRead, BufReader};
 use itertools::Itertools;
 use log::{debug}; // trace, debug, info, warn, error
+use regex::Regex;
 
 /**
  * @brief Utility function to read lines from a file
@@ -80,6 +81,72 @@ pub fn find_sum_equal_to(input_vector: Vec<u32>, num_combo: usize, target_value:
     return Err("No matching pair found.");
 }
 
+#[allow(dead_code)]
+/**
+ * @brief Parse a password line
+ * @details 1-3 a: abcde
+            1-3 b: cdefg
+ */
+pub fn parse_password_line(input_str: String) -> (usize, usize, char, String) {
+    let re = Regex::new(r"(\d+)-(\d+)\s(.):\s(.*)").unwrap();
+    let cap = re.captures(&input_str).unwrap();
+
+    return (cap[1].parse::<usize>().unwrap(), 
+            cap[2].parse::<usize>().unwrap(), 
+            cap[3].parse::<char>().unwrap(), 
+            cap[4].parse::<String>().unwrap());
+}
+
+#[allow(dead_code)]
+/**
+ * 1-3 a: abcde
+ * 1-3 b: cdefg
+ * 2-9 c: ccccccccc
+ * 
+ * In the above example, 2 passwords are valid. The middle password, cdefg, is 
+ *  not; it contains no instances of b, but needs at least 1. The first and 
+ *  third passwords are valid: they contain one a or nine c, both within the 
+ *  limits of their respective policies.
+ */
+pub fn is_valid_sled_password_tuple(entry: (usize, usize, char, String)) -> bool {
+    let min_count = entry.0;
+    let max_count = entry.1;
+    let letter    = entry.2;
+    let pass_str  = entry.3;
+
+    let num_matches = pass_str.matches(letter).count();
+    if num_matches >= min_count && num_matches <= max_count {
+        return true;
+    } 
+    return false;
+}
+
+#[allow(dead_code)]
+/**
+ * Each policy actually describes two positions in the password, where 1 means the 
+ *  first character, 2 means the second character, and so on. (Be careful; Toboggan 
+ *  Corporate Policies have no concept of "index zero"!) Exactly one of these 
+ *  positions must contain the given letter. Other occurrences of the letter 
+ *  are irrelevant for the purposes of policy enforcement.
+ *
+ * Given the same example list from above:
+ *
+ *  1-3 a: abcde is valid: position 1 contains a and position 3 does not.
+ *  1-3 b: cdefg is invalid: neither position 1 nor position 3 contains b.
+ *  2-9 c: ccccccccc is invalid: both position 2 and position 9 contain c.
+ */
+pub fn is_valid_toboggan_password_tuple(entry: (usize, usize, char, String)) -> bool {
+    let yes_index = entry.0 - 1;
+    let no_index  = entry.1 - 1;
+    let letter    = entry.2;
+    let pass_str  = entry.3.as_bytes();
+
+    if (pass_str[yes_index] as char == letter) ^ (pass_str[no_index] as char == letter) {
+        return true;
+    }
+
+    return false;
+}
 
 #[cfg(test)]
 mod tests {
@@ -167,5 +234,39 @@ mod tests {
                 assert!(false);
             }
         }
+    }
+
+    #[test]
+    fn test_parse_password_line() {
+        let string_one = String::from("1-3 a: abcde");
+        let string_two = String::from("1-3 b: cdefg");
+        let string_three = String::from("2-9 c: ccccccccc");
+        let string_four = String::from("12-19 d: goodjorb");
+
+        let res_one = parse_password_line(string_one);
+        let res_two = parse_password_line(string_two);
+        let res_three = parse_password_line(string_three);
+        let res_four = parse_password_line(string_four);
+
+        assert_eq!(res_one, (1, 3, 'a', String::from("abcde")));
+        assert_eq!(res_two, (1, 3, 'b', String::from("cdefg")));
+        assert_eq!(res_three, (2, 9, 'c', String::from("ccccccccc")));
+        assert_eq!(res_four, (12, 19, 'd', String::from("goodjorb")));
+    }
+
+    #[test]
+    fn test_is_valid_sled_password_tuple() {
+        assert!(is_valid_sled_password_tuple((1, 3, 'a', String::from("abcde"))));
+        assert!(!is_valid_sled_password_tuple((1, 3, 'b', String::from("cdefg"))));
+        assert!(is_valid_sled_password_tuple((2, 9, 'c', String::from("ccccccccc"))));
+    }
+
+    #[test]
+    fn test_is_valid_toboggan_password_tuple() {
+        assert!(is_valid_toboggan_password_tuple((1, 3, 'a', String::from("abcde"))));
+        assert!(!is_valid_toboggan_password_tuple((1, 3, 'b', String::from("cdefg"))));
+        assert!(!is_valid_toboggan_password_tuple((2, 9, 'c', String::from("ccccccccc"))));
+        assert!(is_valid_toboggan_password_tuple((15, 16, 'o', String::from("abcdefghijklmnop"))));
+        assert!(is_valid_toboggan_password_tuple((11, 12, 'q', String::from("qqqkqkqqqqzqqq"))));
     }
 }

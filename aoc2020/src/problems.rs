@@ -93,3 +93,46 @@ pub fn problem_012(input_file: String) -> u32 {
     ;
     return aoclib::find_sum_equal_to(input, 3, 2020).unwrap();
 }
+
+/**
+ * @brief Problem #02, part 1
+ * @details To try to debug the problem, they have created a list (your puzzle 
+ *  input) of passwords (according to the corrupted database) and the 
+ *  corporate policy when that password was set.
+ * How many passwords are valid according to their policies?
+ */
+pub fn problem_021(input_file: String) -> u32 {
+    let input: Vec<String> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file");
+
+    let mut count: u32 = 0;
+    for line in input.into_iter() {
+        if aoclib::is_valid_sled_password_tuple(aoclib::parse_password_line(line)) {
+            count += 1;
+        }
+    }
+
+    return count;
+}
+
+/**
+ * @brief Problem #02, part 2
+ * @details The shopkeeper suddenly realizes that he just accidentally explained 
+ *  the password policy rules from his old job at the sled rental place down 
+ *  the street! The Official Toboggan Corporate Policy actually works a little 
+ *  differently.
+ * How many passwords are valid according to the new interpretation of the policies?
+ */
+pub fn problem_022(input_file: String) -> u32 {
+    let input: Vec<String> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file");
+
+    let mut count: u32 = 0;
+    for line in input.into_iter() {
+        if aoclib::is_valid_toboggan_password_tuple(aoclib::parse_password_line(line)) {
+            count += 1;
+        }
+    }
+
+    return count;
+}
