@@ -2,8 +2,24 @@ use std::fs::File;
 use std::io;
 use std::io::{BufRead, BufReader};
 use itertools::Itertools;
-use log::{debug}; // trace, debug, info, warn, error
+use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use regex::Regex;
+
+#[allow(dead_code)]
+fn _get_rid_of_log_unused_import_warnings() {
+    trace!("Example trace.");
+    debug!("Example debug.");
+    info!("Example info.");
+    warn!("Example warn.");
+    error!("Example error.");
+}
+
+#[allow(unused_macros)]
+macro_rules! ifelse {
+    ($c:expr, $v:expr, $v1:expr) => {
+        if $c {$v} else {$v1}
+    };
+}
 
 /**
  * @brief Utility function to read lines from a file
@@ -148,10 +164,84 @@ pub fn is_valid_toboggan_password_tuple(entry: (usize, usize, char, String)) -> 
     return false;
 }
 
+#[allow(dead_code)]
+/**
+ *  ArboralLandscape
+ *  Due to the local geology, trees in this area only grow on exact integer coordinates 
+ *   in a grid. You make a map (your puzzle input) of the open squares (.) and trees (#) 
+ *   you can see.
+ *  These aren't the only trees, though; due to something you read about once involving 
+ *   arboreal genetics and biome stability, the same pattern repeats to the right many times.
+ */
+pub struct ArboralLandscape {
+   tree_map: Vec<Vec<u8>>, 
+}
+
+impl ArboralLandscape {
+    pub fn new(string_map: Vec<String>) -> ArboralLandscape {
+        let rows = string_map.len();
+        let cols = string_map[0].len();
+
+        trace!("rows: {}", rows);
+        trace!("cols: {}", cols);
+
+        let mut tm = vec![vec![0; cols]; rows];
+
+        trace!("tm rows: {}", tm.len());
+        trace!("tm cols: {}", tm[0].len());
+
+        for row_num in 0..rows {
+            for col_num in 0..cols {
+                if string_map[row_num].chars().nth(col_num).unwrap() == '#' {
+                    tm[row_num][col_num] = 1;
+                }
+            }
+        }
+        ArboralLandscape {
+            tree_map: tm,
+        }
+    }
+
+    pub fn print_n(&self, repeat_n: usize) {
+        for row in &self.tree_map {
+            for c in 0..row.len()*repeat_n {
+                print!("{}", ifelse!(row[c%row.len()]==1u8, '#', '.'));
+            }
+            println!();
+        }
+    }
+
+    pub fn print(&self) {
+        self.print_n(1);
+    }
+
+    pub fn traverse(&self, down: u8, right: u8) -> u128 {
+        let mut tree_count: u128 = 0;
+        let mut position = (0, 0);
+        let row_len = self.tree_map[0].len();
+        while position.0 < self.tree_map.len() {
+            tree_count += self.tree_map[position.0][position.1 % row_len] as u128;
+            position = (position.0 + down as usize, position.1 + right as usize);
+        }
+        return tree_count;
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use log::{error};
+
+    fn init() {
+        match env_logger::try_init() {
+            Ok(_) => {
+                info!("Initializing logging...");
+            },
+            Err(_) => {
+
+            }
+        }
+    }
 
     #[test]
     /**
@@ -161,6 +251,7 @@ mod tests {
     For a mass of 100756, the fuel required is 33583.
     */
     fn test_calculate_fuel_naive() {
+        init();
         assert_eq!(calculate_fuel_naive(12),         2);
         assert_eq!(calculate_fuel_naive(14),         2);
         assert_eq!(calculate_fuel_naive(1969),     654);
@@ -178,6 +269,7 @@ mod tests {
      43 + 12 + 2 = 50346.
     */
     fn test_calculate_fuel() {
+        init();
         assert_eq!(calculate_fuel(14),         2);
         assert_eq!(calculate_fuel(1969),     966);
         assert_eq!(calculate_fuel(100756), 50346);
@@ -198,6 +290,7 @@ mod tests {
      1721 * 299 = 514579, so the correct answer is 514579.
     */
     fn test_naive_find_sum_equal_to() {
+        init();
         let input_vec = vec![1721, 979, 366, 299, 675, 1456];
         let result = naive_find_sum_equal_to(input_vec, 2020);
         match result {
@@ -220,6 +313,7 @@ mod tests {
      Multiplying them together produces the answer, 241861950.
     */
     fn test_find_sum_equal_to() {
+        init();
         let input_vec = vec![1721, 979, 366, 299, 675, 1456];
         let result = find_sum_equal_to(input_vec, 3, 2020);
         match result {
@@ -238,6 +332,7 @@ mod tests {
 
     #[test]
     fn test_parse_password_line() {
+        init();
         let string_one = String::from("1-3 a: abcde");
         let string_two = String::from("1-3 b: cdefg");
         let string_three = String::from("2-9 c: ccccccccc");
@@ -256,6 +351,7 @@ mod tests {
 
     #[test]
     fn test_is_valid_sled_password_tuple() {
+        init();
         assert!(is_valid_sled_password_tuple((1, 3, 'a', String::from("abcde"))));
         assert!(!is_valid_sled_password_tuple((1, 3, 'b', String::from("cdefg"))));
         assert!(is_valid_sled_password_tuple((2, 9, 'c', String::from("ccccccccc"))));
@@ -263,10 +359,77 @@ mod tests {
 
     #[test]
     fn test_is_valid_toboggan_password_tuple() {
+        init();
         assert!(is_valid_toboggan_password_tuple((1, 3, 'a', String::from("abcde"))));
         assert!(!is_valid_toboggan_password_tuple((1, 3, 'b', String::from("cdefg"))));
         assert!(!is_valid_toboggan_password_tuple((2, 9, 'c', String::from("ccccccccc"))));
         assert!(is_valid_toboggan_password_tuple((15, 16, 'o', String::from("abcdefghijklmnop"))));
         assert!(is_valid_toboggan_password_tuple((11, 12, 'q', String::from("qqqkqkqqqqzqqq"))));
+    }
+
+    #[test]
+    fn test_new_and_print_arboral_landscape() {
+        init();
+        let string_map = vec![
+            "..##.......".to_string(),
+            "#...#...#..".to_string(),
+            ".#....#..#.".to_string(),
+            "..#.#...#.#".to_string(),
+            ".#...##..#.".to_string(),
+            "..#.##.....".to_string(),
+            ".#.#.#....#".to_string(),
+            ".#........#".to_string(),
+            "#.##...#...".to_string(),
+            "#...##....#".to_string(),
+            ".#..#...#.#".to_string()
+        ];
+        let arboral_landscape = ArboralLandscape::new(string_map);
+        arboral_landscape.print_n(6);
+    }
+
+    #[test]
+    /**
+        Right 1, down 1.
+        Right 3, down 1.
+        Right 5, down 1.
+        Right 7, down 1.
+        Right 1, down 2.
+
+        In the above example, these slopes would find 2, 7, 3, 4, and 2 tree(s) respectively; 
+        multiplied together, these produce the answer 336.
+     */
+    fn test_traverse_arboral_landscape() {
+        init();
+        let string_map = vec![
+            "..##.......".to_string(),
+            "#...#...#..".to_string(),
+            ".#....#..#.".to_string(),
+            "..#.#...#.#".to_string(),
+            ".#...##..#.".to_string(),
+            "..#.##.....".to_string(),
+            ".#.#.#....#".to_string(),
+            ".#........#".to_string(),
+            "#.##...#...".to_string(),
+            "#...##....#".to_string(),
+            ".#..#...#.#".to_string()
+        ];
+        let arboral_landscape = ArboralLandscape::new(string_map);
+        assert_eq!(arboral_landscape.traverse(1,1), 2);
+        assert_eq!(arboral_landscape.traverse(1,3), 7);
+        assert_eq!(arboral_landscape.traverse(1,5), 3);
+        assert_eq!(arboral_landscape.traverse(1,7), 4);
+        assert_eq!(arboral_landscape.traverse(2,1), 2);
+    }
+
+    #[test]
+    fn test_traverse_arboral_landscape_part_2() {
+        init();
+        let string_map = vec![
+            "....".to_string(),
+            "....".to_string(),
+            ".#..".to_string()
+        ];
+        let arboral_landscape = ArboralLandscape::new(string_map);
+        assert_eq!(arboral_landscape.traverse(2,1), 1);
     }
 }

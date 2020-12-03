@@ -1,4 +1,5 @@
 use crate::aoclib;
+use log::{debug}; // trace, debug, info, warn, error
 
 /**
  * @brief Problem #00, part 1
@@ -135,4 +136,49 @@ pub fn problem_022(input_file: String) -> u32 {
     }
 
     return count;
+}
+
+/**
+ * @brief Problem #03, part 1
+ * @details With the toboggan login problems resolved, you set off toward the 
+ *  airport. While travel by toboggan might be easy, it's certainly not safe: 
+ *  there's very minimal steering and the area is covered in trees. You'll 
+ *  need to see which angles will take you near the fewest trees.
+ * Due to the local geology, trees in this area only grow on exact integer 
+ *  coordinates in a grid.
+ */
+pub fn problem_031(input_file: String) -> u128 {
+    let input: Vec<String> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file");
+
+    let arboral_landscape = aoclib::ArboralLandscape::new(input);
+    return arboral_landscape.traverse(1,3);
+}
+
+/**
+ * @brief Problem #03, part 2
+ * @details Time to check the rest of the slopes - you need to minimize
+ *  the probability of a sudden arboreal stop, after all.
+ * Determine the number of trees you would encounter if, for each of the 
+ *  following slopes, you start at the top-left corner and traverse the map 
+ *  all the way to the bottom.
+ * What do you get if you multiply together the number of trees encountered 
+ *  on each of the listed slopes?
+ */
+pub fn problem_032(input_file: String) -> u128 {
+    let input: Vec<String> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file");
+
+    let arboral_landscape = aoclib::ArboralLandscape::new(input);
+    let slope_1_1 = arboral_landscape.traverse(1,1);
+    debug!("slope_1_1: {}", slope_1_1);
+    let slope_1_3 = arboral_landscape.traverse(1,3);
+    debug!("slope_1_3: {}", slope_1_3);
+    let slope_1_5 = arboral_landscape.traverse(1,5);
+    debug!("slope_1_5: {}", slope_1_5);
+    let slope_1_7 = arboral_landscape.traverse(1,7);
+    debug!("slope_1_7: {}", slope_1_7);
+    let slope_2_1 = arboral_landscape.traverse(2,1);
+    debug!("slope_2_1: {}", slope_2_1);
+    return slope_1_1 * slope_1_3 * slope_1_5 * slope_1_7 * slope_2_1;
 }

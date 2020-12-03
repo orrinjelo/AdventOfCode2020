@@ -59,6 +59,18 @@ fn main() {
                     info!("Problem 2; Part 1: {} (Runtime: {} ms)", result_021, then_elapsed.as_millis());
                     info!("Problem 2; Part 2: {} (Runtime: {} ms)", result_022, end_elapsed.as_millis());
                 },
+                // Problem 3; Toboggan Meets Tree
+                Ok(3) => {
+                    let filename = String::from("aoc2020/inputs/03.txt");
+                    let start = Instant::now();
+                    let result_031 = problems::problem_031(filename.clone());
+                    let then_elapsed = start.elapsed();
+                    let then = Instant::now();
+                    let result_032 = problems::problem_032(filename.clone());
+                    let end_elapsed = then.elapsed();
+                    info!("Problem 3; Part 1: {} (Runtime: {} ms)", result_031, then_elapsed.as_millis());
+                    info!("Problem 3; Part 2: {} (Runtime: {} ms)", result_032, end_elapsed.as_millis());
+                },
                 Ok(_) => usage(),
                 Err(_) => error!("Error has occurred?")
             }
