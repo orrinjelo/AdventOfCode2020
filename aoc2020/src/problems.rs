@@ -1,5 +1,5 @@
 use crate::aoclib;
-use log::{debug}; // trace, debug, info, warn, error
+use log::{trace, debug}; // trace, debug, info, warn, error
 
 /**
  *  Problem #00, part 1
@@ -217,4 +217,57 @@ pub fn problem_042(input_file: String) -> u32 {
         .expect("Could not read from file");
 
     return aoclib::count_valid_passports(aoclib::semi_questionable_passport_factory(input, true));
+}
+
+/// Problem #05, Part 1
+/// What is the highest seat ID on a boarding pass?
+pub fn problem_051(input_file: String) -> u32 {
+    let input: Vec<String> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file");
+
+    let mut max_id = 0;
+    for entry in input {
+         let pass = aoclib::BoardingPass::new(entry);
+         if pass.id > max_id {
+            max_id = pass.id;
+         }
+    }
+
+    return max_id;
+}
+
+/// Problem #05, Part 2
+/// It's a completely full flight, so your seat should be the only missing boarding pass in your 
+///  list. However, there's a catch: some of the seats at the very front and back of the plane 
+///  don't exist on this aircraft, so they'll be missing from your list as well.
+///
+/// Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours 
+///  will be in your list.
+///
+/// What is the ID of your seat?
+pub fn problem_052(input_file: String) -> u32 {
+    let input: Vec<String> = aoclib::lines_from_file(input_file)
+        .expect("Could not read from file");
+
+    let mut pass_vector = Vec::new();
+    for entry in input {
+        let pass = aoclib::BoardingPass::new(entry);
+        pass_vector.push(pass.id);
+    }
+
+    pass_vector.sort();
+
+    trace!("Pass Vector: {:?}", pass_vector);
+
+    let mut last_id = 0;
+    for pass_id in pass_vector {
+        if last_id == 0 {
+            last_id = pass_id;
+        } else if last_id + 1 != pass_id {
+            return last_id + 1;
+        } else {
+            last_id = pass_id;
+        }
+    }
+    return 0;
 }

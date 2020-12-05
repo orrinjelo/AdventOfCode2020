@@ -381,6 +381,58 @@ pub fn count_valid_passports(passports: Vec<Passport>) -> u32 {
     return count;
 }
 
+/// Boarding pass
+/// Has a row, column, binary space partitioning code (bsp), and ID.
+/// Row and column can be computed from BSP, and ID can be calculated from that
+#[allow(dead_code)]
+pub struct BoardingPass {
+    bsp: String,
+    row: u32,
+    col: u32,
+    pub id: u32
+}
+
+/// Binary split, if F/L, first half; if B/R, back half.
+pub fn binary_split(range: (u32, u32), bsp_code: String) -> u32 {
+    // So...ah...we could just convert the string into binary instead of this crap.
+    binary_split_indexed(range, bsp_code, 0).0
+}
+
+pub fn binary_split_indexed(range: (u32, u32), bsp_code: String, bsp_index: usize) -> (u32, u32) {
+    let mut new_range = (range.0, range.1);
+    trace!("range: {:?}, bsp: {}", range, bsp_index);
+    let code = bsp_code.chars().nth(bsp_index).unwrap();
+    match code {
+        'F' | 'L' => new_range = (new_range.0, new_range.0+(new_range.1-new_range.0)/2),
+        'B' | 'R' => new_range = (new_range.0+(new_range.1-new_range.0)/2+1, new_range.1),
+        _ => return new_range
+    }
+    if new_range.0 != new_range.1 {
+        new_range = binary_split_indexed(new_range, bsp_code, bsp_index+1);
+    } 
+    return new_range;
+}
+
+impl BoardingPass {
+    pub fn new(bsp_str: String) -> BoardingPass {
+        let row_str = &bsp_str[0..7];
+        let col_str = &bsp_str[7..10];
+
+        trace!("rowstr: {}, colstr: {}", row_str, col_str);
+
+        let row_val = binary_split((0,127), row_str.to_string());
+        let col_val = binary_split((0,7), col_str.to_string());
+
+        BoardingPass {
+            bsp: bsp_str,
+            row: row_val,
+            col: col_val,
+            id: col_val + row_val * 8,
+        }
+    }
+
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -675,5 +727,34 @@ mod tests {
 
         let valid_passports = semi_questionable_passport_factory(valid_passport_strings, true);
         assert_eq!(count_valid_passports(valid_passports), 4);
+    }
+
+    #[test]
+    /// BFFFBBFRRR: row 70, column 7, seat ID 567.
+    /// FFFBBBFRRR: row 14, column 7, seat ID 119.
+    /// BBFFBBFRLL: row 102, column 4, seat ID 820.
+    fn test_binary_split() {
+        // FBFBBFFRLR row 44, column 5
+        assert_eq!(binary_split((0,127), "FBFBBFF".to_string()), 44);
+        assert_eq!(binary_split((0,7),   "RLR".to_string()),      5);
+
+        assert_eq!(binary_split((0,127), "BFFFBBF".to_string()), 70);
+        assert_eq!(binary_split((0,7),   "RRR".to_string()),      7);
+
+        assert_eq!(binary_split((0,127), "FFFBBBF".to_string()), 14);
+        assert_eq!(binary_split((0,7),   "RRR".to_string()),      7);
+
+        assert_eq!(binary_split((0,127), "BBFFBBF".to_string()), 102);
+        assert_eq!(binary_split((0,7),   "RLL".to_string()),      4);
+    }
+
+    #[test]
+    fn test_boarding_pass() {
+        let boarding_pass_1 = BoardingPass::new("BFFFBBFRRR".to_string());
+
+        assert_eq!(boarding_pass_1.bsp, "BFFFBBFRRR".to_string());
+        assert_eq!(boarding_pass_1.row, 70);
+        assert_eq!(boarding_pass_1.col, 7);
+        assert_eq!(boarding_pass_1.id, 567);
     }
 }
