@@ -10,6 +10,8 @@ log = "~0.4"
 env_logger = "~0.8"
 regex = "~1.4"
 rustop = "~1.1.1"
+petgraph = "0.5.1"
+matrix = "0.22.0"
 
 [[bin]]
 name = "main"
