@@ -12,6 +12,7 @@ regex = "~1.4"
 rustop = "~1.1.1"
 petgraph = "0.5.1"
 matrix = "0.22.0"
+log4rs = "0.13.0"
 
 [[bin]]
 name = "main"

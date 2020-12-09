@@ -6,8 +6,9 @@ mod virtualmachine;
 use crate::util::load_file;
 
 // use std::env;
-use log::{info, warn}; // trace, debug, info, warn, error
+use log::{info, warn, Level}; // trace, debug, info, warn, error
 use env_logger;
+use std::io::Write;
 use std::time::Instant;
 use rustop::opts;
 
@@ -68,15 +69,32 @@ fn run_problem(num: i32, input: Vec<String>) {
         6 => execute_problem(num, input, problems::problem06::problem_061, problems::problem06::problem_062),
         // Problem 7; Bags are dumb
         7 => execute_problem(num, input, problems::problem07::problem_071, problems::problem07::problem_072),
-        // Problem 7; Bags are dumb
+        // Problem 8; Kids are dumb
         8 => execute_problem_i32(num, input, problems::problem08::problem_081, problems::problem08::problem_082),
+        // Problem 9; Paperclips are OP
+        9 => execute_problem_u128(num, input, problems::problem09::problem_091, problems::problem09::problem_092),
         _ => warn!("Problem number not available.")
     }
 }
 
 fn main() {
     // Set up logging
-    env_logger::init();
+    env_logger::builder()
+        .format(|buf, record| {
+            let mut style = buf.style();
+
+            let color = match record.level() {
+                Level::Trace => env_logger::fmt::Color::Magenta,
+                Level::Debug => env_logger::fmt::Color::Cyan,
+                Level::Info  => env_logger::fmt::Color::Green,
+                Level::Warn  => env_logger::fmt::Color::Yellow,
+                Level::Error => env_logger::fmt::Color::Red,
+            };
+
+            style.set_color(color);
+            writeln!(buf, "{}: {}", style.value(record.level()), record.args())
+        })
+        .init();
 
     let opts = opts! {
         synopsis "Advent of Code 2020";
@@ -86,6 +104,27 @@ fn main() {
     };
 
     let (args, _rest) = opts.parse_or_exit();
+
+    // // Build logging 
+    // let stdout = ConsoleAppender::builder().build();
+
+    // let requests = FileAppender::builder()
+    //     .encoder(Box::new(PatternEncoder::new("{d} - {m}{n}")))
+    //     .build("log/requests.log")
+    //     .unwrap();
+
+    // let config = Config::builder()
+    //     .appender(Appender::builder().build("stdout", Box::new(stdout)))
+    //     .appender(Appender::builder().build("requests", Box::new(requests)))
+    //     .logger(Logger::builder().build("app::backend::db", LevelFilter::Info))
+    //     .logger(Logger::builder()
+    //         .appender("requests")
+    //         .additive(false)
+    //         .build("app::requests", LevelFilter::Info))
+    //     .build(Root::builder().appender("stdout").build(LevelFilter::Warn))
+    //     .unwrap();
+
+    // let _handle = log4rs::init_config(config).unwrap();
 
     info!("{:?}", args.number);
 
