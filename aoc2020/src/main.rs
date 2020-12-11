@@ -73,6 +73,10 @@ fn run_problem(num: i32, input: Vec<String>) {
         8 => execute_problem_i32(num, input, problems::problem08::problem_081, problems::problem08::problem_082),
         // Problem 9; Paperclips are OP
         9 => execute_problem_u128(num, input, problems::problem09::problem_091, problems::problem09::problem_092),
+        // Problem 10; Adapters are dumb
+        10 => execute_problem_u128(num, input, problems::problem10::problem_101, problems::problem10::problem_102),
+        // Problem 11; Adapters are dumb
+        11 => execute_problem(num, input, problems::problem11::problem_111, problems::problem11::problem_112),
         _ => warn!("Problem number not available.")
     }
 }
@@ -104,27 +108,6 @@ fn main() {
     };
 
     let (args, _rest) = opts.parse_or_exit();
-
-    // // Build logging 
-    // let stdout = ConsoleAppender::builder().build();
-
-    // let requests = FileAppender::builder()
-    //     .encoder(Box::new(PatternEncoder::new("{d} - {m}{n}")))
-    //     .build("log/requests.log")
-    //     .unwrap();
-
-    // let config = Config::builder()
-    //     .appender(Appender::builder().build("stdout", Box::new(stdout)))
-    //     .appender(Appender::builder().build("requests", Box::new(requests)))
-    //     .logger(Logger::builder().build("app::backend::db", LevelFilter::Info))
-    //     .logger(Logger::builder()
-    //         .appender("requests")
-    //         .additive(false)
-    //         .build("app::requests", LevelFilter::Info))
-    //     .build(Root::builder().appender("stdout").build(LevelFilter::Warn))
-    //     .unwrap();
-
-    // let _handle = log4rs::init_config(config).unwrap();
 
     info!("{:?}", args.number);
 

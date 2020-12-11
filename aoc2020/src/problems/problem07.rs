@@ -1,6 +1,8 @@
 use regex::Regex;
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use crate::matrix;
+// use petgraph::graphmap::DiGraphMap;
+// use petgraph::{algo, Directed};
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -121,6 +123,34 @@ pub fn problem_071(input: Vec<String>) -> u32 {
 
     return count;
 }
+
+// #[allow(dead_code)]
+// pub fn problem_071_alt(input: Vec<String>) -> u32 {
+//     let mut count: u32 = 0;
+
+//     // Construct graph
+//     let mut g = DiGraphMap::<_, u32>::new();
+//     for line in input.into_iter() {
+//         let (bag, contents) = parse_luggage_line(line);
+//         if !g.contains_node(bag) {
+//             g.add_node(bag);
+//         }
+//         for (w, n) in contents {
+//             if !g.contains_node(n) {
+//                 g.add_node(n);
+//             }
+//             g.add_edge(bag, n, w);
+//         }
+//     }
+
+//     for bag_type in g.nodes() {
+//         if algo::has_path_connecting(g, bag_type.weight, "shiny gold", None) {
+//             count += 1;
+//         }
+//     }
+
+//     return count;
+// }
 
 /// Problem #07, part 2
 /// How many bag colors can eventually contain at least one shiny gold bag?
