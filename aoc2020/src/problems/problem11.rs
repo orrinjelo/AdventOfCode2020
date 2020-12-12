@@ -1,11 +1,5 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 
-macro_rules! ifelse {
-    ($c:expr, $v:expr, $v1:expr) => {
-        if $c {$v} else {$v1}
-    };
-}
-
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
     trace!("Example trace.");
@@ -20,32 +14,38 @@ fn count_occupied_neighbors(state: &Vec<Vec<u32>>, i: usize, j: usize) -> u32 {
     let max_i = state.len()-1;
     let max_j = state[0].len()-1;
  
-    s += ifelse!(i!=0,ifelse!(j!=0,ifelse!(state[i-1][j-1] == 2, 1, 0),0),0);
-    s += ifelse!(i!=0,ifelse!(state[i-1][j] == 2, 1, 0),0);
-    s += ifelse!(i!=0,ifelse!(j!=max_j,ifelse!(state[i-1][j+1] == 2, 1, 0),0),0);
+    s += if i!=0     { if j!=0     { if state[i-1][j-1] == 2 {1} else {0} } else {0} } else {0} +
+         if i!=0     {               if state[i-1][j]   == 2 {1} else {0}            } else {0} +
+         if i!=0     { if j!=max_j { if state[i-1][j+1] == 2 {1} else {0} } else {0} } else {0} +
  
-    s += ifelse!(j!=0,ifelse!(state[i][j-1] == 2, 1, 0),0);
-    s += ifelse!(j!=max_j,ifelse!(state[i][j+1] == 2, 1, 0),0);
+                       if j!=0     { if state[i][j-1]   == 2 {1} else {0} } else {0}            +
+                       if j!=max_j { if state[i][j+1]   == 2 {1} else {0} } else {0}            +
  
-    s += ifelse!(i!=max_i,ifelse!(j!=0,ifelse!(state[i+1][j-1] == 2, 1, 0),0),0);
-    s += ifelse!(i!=max_i,ifelse!(state[i+1][j] == 2, 1, 0),0);
-    s += ifelse!(i!=max_i,ifelse!(j!=max_j,ifelse!(state[i+1][j+1] == 2, 1, 0),0),0);
+         if i!=max_i { if j!=0     { if state[i+1][j-1] == 2 {1} else {0} } else {0} } else {0} +
+         if i!=max_i {               if state[i+1][j]   == 2 {1} else {0}            } else {0} +
+         if i!=max_i { if j!=max_j { if state[i+1][j+1] == 2 {1} else {0} } else {0} } else {0}
+    ;
 
     s
 }
 
 fn check_direction(state: &Vec<Vec<u32>>, i: usize, j: usize, ii: i32, jj: i32, mul: i32) -> bool {
+    let i_len = state.len();
+    let j_len = state[0].len();
+
     trace!("({},{}) In direction {}, {}...", i, j, ii*mul, jj*mul);
+    trace!("state size: {} x {}", state.len(), state[0].len());
+
     if i as i32 + ii*mul < 0 { // 0 boundary condition
         trace!("Hit i zero-boundary.");
         return false;
-    } else if ii*mul + i as i32 >= state.len() as i32 { // Upper boundary condition
+    } else if ii*mul + i as i32 >= i_len as i32 { // Upper boundary condition
         trace!("Hit i pos-boundary.");
         return false;
     } else if j as i32 + jj*mul < 0 { // 0 boundary condition
         trace!("Hit j zero-boundary.");
         return false;
-    } else if jj*mul + j as i32 >= state.len() as i32 { // Upper boundary condition
+    } else if jj*mul + j as i32 >= j_len as i32 { // Upper boundary condition
         trace!("Hit j pos-boundary.");
         return false;
     }
@@ -62,14 +62,14 @@ fn check_direction(state: &Vec<Vec<u32>>, i: usize, j: usize, ii: i32, jj: i32, 
 fn count_occupied_distant_neighbors(state: &Vec<Vec<u32>>, i: usize, j: usize) -> u32 {
     let mut s = 0;
  
-    s += ifelse!(check_direction(state, i, j, -1, -1, 1), 1, 0);
-    s += ifelse!(check_direction(state, i, j, -1,  0, 1), 1, 0);
-    s += ifelse!(check_direction(state, i, j, -1,  1, 1), 1, 0);
-    s += ifelse!(check_direction(state, i, j,  0,  1, 1), 1, 0);
-    s += ifelse!(check_direction(state, i, j,  1,  1, 1), 1, 0);
-    s += ifelse!(check_direction(state, i, j,  1,  0, 1), 1, 0);
-    s += ifelse!(check_direction(state, i, j,  1, -1, 1), 1, 0);
-    s += ifelse!(check_direction(state, i, j,  0, -1, 1), 1, 0);
+    s += if check_direction(state, i, j, -1, -1, 1) {1} else {0}
+      +  if check_direction(state, i, j, -1,  0, 1) {1} else {0}
+      +  if check_direction(state, i, j, -1,  1, 1) {1} else {0}
+      +  if check_direction(state, i, j,  0,  1, 1) {1} else {0}
+      +  if check_direction(state, i, j,  1,  1, 1) {1} else {0}
+      +  if check_direction(state, i, j,  1,  0, 1) {1} else {0}
+      +  if check_direction(state, i, j,  1, -1, 1) {1} else {0}
+      +  if check_direction(state, i, j,  0, -1, 1) {1} else {0};
 
     s
 }
@@ -121,9 +121,9 @@ fn game_of_chairs(state: &mut Vec<Vec<u32>>) -> bool {
         }
     }
     
-    for i in 0..old_state.len() {
-        for j in 0..state[0].len() {
-            state[i][j] = match state[i][j] {
+    for i in 0..i_len {
+        for j in 0..j_len {
+            state[i][j] = match old_state[i][j] {
                 0 => continue,
                 1 => {
                     if count_occupied_neighbors(&old_state, i, j) == 0 {
@@ -162,22 +162,18 @@ fn game_of_swedish_chairs(state: &mut Vec<Vec<u32>>) -> bool {
         }
     }
     
-    for i in 0..old_state.len() {
-        for j in 0..state[0].len() {
-            state[i][j] = match state[i][j] {
+    for i in 0..i_len {
+        for j in 0..j_len {
+            state[i][j] = match old_state[i][j] {
                 0 => 0,
                 1 => {
-                    if count_occupied_distant_neighbors(&old_state, i, j) == 0 {
-                        2
-                    } else {1}
+                    if count_occupied_distant_neighbors(&old_state, i, j) == 0 {2} else {1}
                 },
                 2 => {
-                    if count_occupied_distant_neighbors(&old_state, i, j) >= 5 {
-                        1
-                    } else {2}
+                    if count_occupied_distant_neighbors(&old_state, i, j) >= 5 {1} else {2}
                 },
-                x => x,
-            }
+                x => x
+            };
         }
     }
 
@@ -185,10 +181,6 @@ fn game_of_swedish_chairs(state: &mut Vec<Vec<u32>>) -> bool {
 }
 
 /// Problem #11, part 1
-/// The first step of attacking the weakness in the XMAS data is to find the 
-///  first number in the list (after the preamble) which is not the sum of two 
-///  of the 25 numbers before it. What is the first number that does not have 
-///  this property?
 pub fn problem_111(input: Vec<String>) -> u32 {
     let mut parsed_input: Vec<Vec<u32>> = vec![vec![0; input[9].len()]; input.len()];
 
@@ -218,8 +210,6 @@ pub fn problem_111(input: Vec<String>) -> u32 {
 }
 
 /// Problem #11, part 2
-/// What is the total number of distinct ways you can arrange the adapters to 
-///  connect the charging outlet to your device?
 pub fn problem_112(input: Vec<String>) -> u32 {
     let mut parsed_input: Vec<Vec<u32>> = vec![vec![0; input[9].len()]; input.len()];
 
@@ -242,7 +232,6 @@ pub fn problem_112(input: Vec<String>) -> u32 {
     }
 
     while !game_of_swedish_chairs(&mut parsed_input) {
-        // print_chairs(&parsed_input);
     }
 
     count_occupied_chairs(&parsed_input)
@@ -369,6 +358,231 @@ mod tests {
         print_chairs(&output);
 
         assert_eq!(input, output);
+    }
+
+    #[test]
+    fn test_swiss_step_2() {
+        init();
+
+        let mut state = vec![
+            vec![1,0,1,1,0,1,1,0,1,1],
+            vec![1,1,1,1,1,1,1,0,1,1],
+            vec![1,0,1,0,1,0,0,1,0,0],
+            vec![1,1,1,1,0,1,1,0,1,1],
+            vec![1,0,1,1,0,1,1,0,1,1],
+            vec![1,0,1,1,1,1,1,0,1,1],
+            vec![0,0,1,0,1,0,0,0,0,0],
+            vec![1,1,1,1,1,1,1,1,1,1],
+            vec![1,0,1,1,1,1,1,1,0,1],
+            vec![1,0,1,1,1,1,1,0,1,1],
+        ];
+
+        game_of_swedish_chairs(& mut state);
+
+        let step1 = vec![
+            vec![2,0,2,2,0,2,2,0,2,2],
+            vec![2,2,2,2,2,2,2,0,2,2],
+            vec![2,0,2,0,2,0,0,2,0,0],
+            vec![2,2,2,2,0,2,2,0,2,2],
+            vec![2,0,2,2,0,2,2,0,2,2],
+            vec![2,0,2,2,2,2,2,0,2,2],
+            vec![0,0,2,0,2,0,0,0,0,0],
+            vec![2,2,2,2,2,2,2,2,2,2],
+            vec![2,0,2,2,2,2,2,2,0,2],
+            vec![2,0,2,2,2,2,2,0,2,2],
+        ];
+
+        assert_eq!(state, step1);
+
+        game_of_swedish_chairs(& mut state);
+
+        let step2 = vec![
+            vec![2,0,1,1,0,1,1,0,1,2],
+            vec![2,1,1,1,1,1,1,0,1,1],
+            vec![1,0,1,0,1,0,0,1,0,0],
+            vec![1,1,1,1,0,1,1,0,1,1],
+            vec![1,0,1,1,0,1,1,0,1,1],
+            vec![1,0,1,1,1,1,1,0,1,1],
+            vec![0,0,1,0,1,0,0,0,0,0],
+            vec![1,1,1,1,1,1,1,1,1,2],
+            vec![2,0,1,1,1,1,1,1,0,1],
+            vec![2,0,1,1,1,1,1,0,1,2],
+        ];
+
+        assert_eq!(state, step2);
+
+        game_of_swedish_chairs(& mut state);
+
+        let step3 = vec![
+            vec![2,0,1,2,0,2,2,0,1,2],
+            vec![2,1,2,2,2,2,2,0,1,1],
+            vec![1,0,2,0,2,0,0,2,0,0],
+            vec![2,2,1,2,0,2,2,0,2,2],
+            vec![2,0,2,2,0,2,1,0,2,2],
+            vec![2,0,2,2,2,2,2,0,2,1],
+            vec![0,0,2,0,2,0,0,0,0,0],
+            vec![1,1,1,2,2,2,2,1,1,2],
+            vec![2,0,1,2,2,2,2,2,0,1],
+            vec![2,0,1,2,2,2,2,0,1,2],
+        ];
+
+        assert_eq!(state, step3);
+
+    }
+
+    #[test]
+    fn test_distant_neighbors() {
+        init();
+
+        let input = vec![
+            vec![0,2,2,0,2,2,0],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![0,0,0,1,0,0,0],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![0,2,2,0,2,2,0],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input, 3, 3), 0);
+
+        let input1 = vec![
+            vec![0,2,2,0,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![0,0,0,1,0,0,0],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![0,2,2,0,2,2,0],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input1, 3, 3), 1);
+
+        let input2 = vec![
+            vec![0,2,2,0,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![0,0,0,1,0,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![0,2,2,0,2,2,0],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input2, 3, 3), 2);
+
+        let input3 = vec![
+            vec![0,2,2,0,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![0,0,0,1,0,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![0,2,2,0,2,2,2],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input3, 3, 3), 3);
+
+        let input4 = vec![
+            vec![0,2,2,0,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![0,0,0,1,0,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![0,2,2,2,2,2,2],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input4, 3, 3), 4);
+
+        let input5 = vec![
+            vec![0,2,2,0,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![0,0,0,1,0,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,2,2,2,2,2],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input5, 3, 3), 5);
+
+        let input6 = vec![
+            vec![0,2,2,0,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,0,1,0,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,2,2,2,2,2],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input6, 3, 3), 6);
+
+        let input7 = vec![
+            vec![2,2,2,0,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,0,1,0,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,2,2,2,2,2],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input7, 3, 3), 7);
+
+        let input8 = vec![
+            vec![2,2,2,2,2,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,0,1,0,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,2,2,2,2,2],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input8, 3, 3), 8);
+
+        let input9 = vec![
+            vec![1,2,2,1,2,2,1],
+            vec![2,0,2,0,2,0,2],
+            vec![2,2,0,0,0,2,2],
+            vec![1,0,0,1,0,0,1],
+            vec![2,2,0,0,0,2,2],
+            vec![2,0,2,0,2,0,2],
+            vec![1,2,2,1,2,2,1],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input9, 0, 0), 2);
+        assert_eq!(count_occupied_distant_neighbors(&input9, 6, 0), 2);
+        assert_eq!(count_occupied_distant_neighbors(&input9, 0, 6), 2);
+        assert_eq!(count_occupied_distant_neighbors(&input9, 6, 6), 2);
+        assert_eq!(count_occupied_distant_neighbors(&input9, 3, 0), 4);
+        assert_eq!(count_occupied_distant_neighbors(&input9, 3, 6), 4);
+        assert_eq!(count_occupied_distant_neighbors(&input9, 6, 3), 4);
+        assert_eq!(count_occupied_distant_neighbors(&input9, 0, 3), 4);
+
+        let input10 = vec![
+            vec![0,0,0,0,0,0,0,2,0],
+            vec![0,0,0,2,0,0,0,0,0],
+            vec![0,2,0,0,0,0,0,0,0],
+            vec![0,0,0,0,0,0,0,0,0],
+            vec![0,0,2,1,0,0,0,0,2],
+            vec![0,0,0,0,2,0,0,0,0],
+            vec![0,0,0,0,0,0,0,0,0],
+            vec![2,0,0,0,0,0,0,0,0],
+            vec![0,0,0,2,0,0,0,0,0],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input10, 4, 3), 8);
+
+        let input11 = vec![
+            vec![0,0,0,0,0,0,0,0,0,0,0,0,0],
+            vec![0,1,0,1,0,2,0,2,0,2,0,2,0],
+            vec![0,0,0,0,0,0,0,0,0,0,0,0,0],
+        ];
+
+        assert_eq!(count_occupied_distant_neighbors(&input11, 1, 1), 0);
+        assert_eq!(count_occupied_distant_neighbors(&input11, 1, 3), 0);
     }
 
 }
