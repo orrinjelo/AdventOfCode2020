@@ -582,7 +582,7 @@ mod tests {
         ];
 
         assert_eq!(count_occupied_distant_neighbors(&input11, 1, 1), 0);
-        assert_eq!(count_occupied_distant_neighbors(&input11, 1, 3), 0);
+        assert_eq!(count_occupied_distant_neighbors(&input11, 1, 3), 1);
     }
 
 }

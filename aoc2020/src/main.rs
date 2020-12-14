@@ -51,6 +51,17 @@ fn execute_problem_u128(num: i32, input: Vec<String>, part1: fn(Vec<String>) -> 
     info!("Problem {}; Part 2: {} (Runtime: {} μs)", num, result_2, end_elapsed.as_micros());    
 }
 
+fn execute_problem_u64(num: i32, input: Vec<String>, part1: fn(Vec<String>) -> u64, part2: fn(Vec<String>) -> u64) {
+    let start = Instant::now();
+    let result_1 = part1(input.clone());
+    let then_elapsed = start.elapsed();
+    let then = Instant::now();
+    let result_2 = part2(input.clone());
+    let end_elapsed = then.elapsed();
+    info!("Problem {}; Part 1: {} (Runtime: {} μs)", num, result_1, then_elapsed.as_micros());
+    info!("Problem {}; Part 2: {} (Runtime: {} μs)", num, result_2, end_elapsed.as_micros());    
+}
+
 fn run_problem(num: i32, input: Vec<String>) {
     match num {
         // Example problem (problem from last year!)
@@ -75,8 +86,14 @@ fn run_problem(num: i32, input: Vec<String>) {
         9 => execute_problem_u128(num, input, problems::problem09::problem_091, problems::problem09::problem_092),
         // Problem 10; Adapters are dumb
         10 => execute_problem_u128(num, input, problems::problem10::problem_101, problems::problem10::problem_102),
-        // Problem 11; Adapters are dumb
+        // Problem 11; People are dumb and these ones act like bacteria cultures
         11 => execute_problem(num, input, problems::problem11::problem_111, problems::problem11::problem_112),
+        // Problem 12; Ships are dumb
+        12 => execute_problem(num, input, problems::problem12::problem_121, problems::problem12::problem_122),
+        // Problem 13; Buses are dumb
+        13 => execute_problem_u128(num, input, problems::problem13::problem_131, problems::problem13::problem_132),
+        // Problem 14; What is this?  I don't even know.
+        14 => execute_problem_u64(num, input, problems::problem14::problem_141, problems::problem14::problem_142),
         _ => warn!("Problem number not available.")
     }
 }
