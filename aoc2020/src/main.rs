@@ -94,6 +94,8 @@ fn run_problem(num: i32, input: Vec<String>) {
         13 => execute_problem_u128(num, input, problems::problem13::problem_131, problems::problem13::problem_132),
         // Problem 14; What is this?  I don't even know.
         14 => execute_problem_u64(num, input, problems::problem14::problem_141, problems::problem14::problem_142),
+        // Problem 15; Number Memory Game
+        15 => execute_problem(num, input, problems::problem15::problem_151, problems::problem15::problem_152),
         _ => warn!("Problem number not available.")
     }
 }

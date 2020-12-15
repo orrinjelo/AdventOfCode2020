@@ -13,6 +13,7 @@ rustop = "~1.1.1"
 petgraph = "0.5.1"
 matrix = "0.22.0"
 log4rs = "0.13.0"
+plotly = "0.6.0"
 
 [[bin]]
 name = "main"
