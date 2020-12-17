@@ -1,4 +1,20 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use plotly::common::Mode;
+use plotly::{Plot, Scatter};
+
+fn line_and_scatter_plot(x: &Vec<i32>, y: &Vec<i32>) {
+    let x_axis: Vec<i32> = x.to_vec();
+    let y_axis: Vec<i32> = y.to_vec();
+    let trace1 = Scatter::new(x_axis, y_axis)
+        .name("Boat Path")
+        .mode(Mode::Lines);
+
+    let mut plot = Plot::new();
+
+    plot.add_trace(trace1);
+
+    plot.show();
+}
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -27,6 +43,8 @@ struct Ship {
     lon: i32,
     dir: Direction,
     waypoint: Waypoint,
+    history_lat: Vec<i32>,
+    history_lon: Vec<i32>,
 }
 
 impl Ship {
@@ -38,7 +56,9 @@ impl Ship {
             waypoint: Waypoint {
                 lat: 1,
                 lon: 10,
-            }
+            },
+            history_lon: vec![10],
+            history_lat: vec![1],
         }
     }
 
@@ -112,6 +132,8 @@ impl Ship {
                     Direction::East  => { self.lon += value; },
                     Direction::West  => { self.lon -= value; },
                 };
+                self.history_lat.push(self.lat);
+                self.history_lon.push(self.lon);
             },
             _ => {}
         };
@@ -131,7 +153,7 @@ impl Ship {
         let lat = self.waypoint.lat;
         let lon = self.waypoint.lon;
 
-        debug!("Line: {}", line);
+        trace!("Line: {}", line);
 
         match letter {
             'N' => { self.waypoint.lat += value; },
@@ -171,6 +193,8 @@ impl Ship {
             'F' => {
                 self.lat += self.waypoint.lat * value;
                 self.lon += self.waypoint.lon * value;
+                self.history_lat.push(self.lat);
+                self.history_lon.push(self.lon);
             },
             _ => {}
         };
@@ -178,6 +202,10 @@ impl Ship {
 
     pub fn manhattan_distance(&self) -> u32 {
         (self.lat.abs() + self.lon.abs()) as u32
+    }
+
+    pub fn plot(&self) {
+        line_and_scatter_plot(&self.history_lon, &self.history_lat);
     }
 }
 
@@ -196,6 +224,7 @@ pub fn problem_122(input: Vec<String>) -> u32 {
     for line in input {
         ship.parse_instruction(line);
     }
+    ship.plot();
     ship.manhattan_distance()
 }
 

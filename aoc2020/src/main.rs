@@ -96,6 +96,10 @@ fn run_problem(num: i32, input: Vec<String>) {
         14 => execute_problem_u64(num, input, problems::problem14::problem_141, problems::problem14::problem_142),
         // Problem 15; Number Memory Game
         15 => execute_problem(num, input, problems::problem15::problem_151, problems::problem15::problem_152),
+        // Problem 16; Tickets in Another Language
+        16 => execute_problem_u128(num, input, problems::problem16::problem_161, problems::problem16::problem_162),
+        // Problem 17; Game of Life 3D...I mean, 4D
+        17 => execute_problem(num, input, problems::problem17::problem_171, problems::problem17::problem_172),
         _ => warn!("Problem number not available.")
     }
 }
