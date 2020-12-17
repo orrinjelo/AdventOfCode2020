@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io;
 use std::io::{BufRead, BufReader};
+use std::fmt;
 // use gif;
 // use std::borrow::Cow;
 // use std::convert::TryInto;
@@ -76,3 +77,35 @@ pub fn flatten<T>(nested: Vec<Vec<T>>) -> Vec<T> {
 //         self.encoder.write_frame(&frame).unwrap();
 //     }
 // }
+
+#[derive(Clone, PartialEq)]
+pub enum RetType {
+    U32(u32),
+    I32(i32),
+    U64(u64),
+    U128(u128)
+}
+
+impl fmt::Debug for RetType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            RetType::U32(x) => write!(f, "{:?}", x),
+            RetType::I32(x) => write!(f, "{:?}", x),
+            RetType::U64(x) => write!(f, "{:?}", x),
+            RetType::U128(x) => write!(f, "{:?}", x),
+        }
+        
+    }
+}
+
+impl fmt::Display for RetType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            RetType::U32(x) => write!(f, "{}", x),
+            RetType::I32(x) => write!(f, "{}", x),
+            RetType::U64(x) => write!(f, "{}", x),
+            RetType::U128(x) => write!(f, "{}", x),
+        }
+        
+    }
+}

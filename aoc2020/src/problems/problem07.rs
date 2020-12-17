@@ -1,8 +1,7 @@
 use regex::Regex;
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use crate::matrix;
-// use petgraph::graphmap::DiGraphMap;
-// use petgraph::{algo, Directed};
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -104,7 +103,7 @@ fn forward_count(g: &mut matrix::SquareMatrix<u32>, n: String) -> u32 {
 
 /// Problem #07, part 1
 /// How many bag colors can eventually contain at least one shiny gold bag?
-pub fn problem_071(input: Vec<String>) -> u32 {
+pub fn problem_071(input: Vec<String>) -> RetType {
     let mut count: u32 = 0;
     let mut g = matrix::SquareMatrix::new(0);
     for line in input.into_iter() {
@@ -121,47 +120,19 @@ pub fn problem_071(input: Vec<String>) -> u32 {
         }
     }
 
-    return count;
+    return RetType::U32(count);
 }
-
-// #[allow(dead_code)]
-// pub fn problem_071_alt(input: Vec<String>) -> u32 {
-//     let mut count: u32 = 0;
-
-//     // Construct graph
-//     let mut g = DiGraphMap::<_, u32>::new();
-//     for line in input.into_iter() {
-//         let (bag, contents) = parse_luggage_line(line);
-//         if !g.contains_node(bag) {
-//             g.add_node(bag);
-//         }
-//         for (w, n) in contents {
-//             if !g.contains_node(n) {
-//                 g.add_node(n);
-//             }
-//             g.add_edge(bag, n, w);
-//         }
-//     }
-
-//     for bag_type in g.nodes() {
-//         if algo::has_path_connecting(g, bag_type.weight, "shiny gold", None) {
-//             count += 1;
-//         }
-//     }
-
-//     return count;
-// }
 
 /// Problem #07, part 2
 /// How many bag colors can eventually contain at least one shiny gold bag?
-pub fn problem_072(input: Vec<String>) -> u32 {
+pub fn problem_072(input: Vec<String>) -> RetType {
     let mut g = matrix::SquareMatrix::new(0);
     for line in input.into_iter() {
         let (bag, contents) = parse_luggage_line(line);
         add_node_and_edges(&mut g, bag, contents);
     }
 
-    forward_count(&mut g, "shiny gold".to_string())
+    RetType::U32(forward_count(&mut g, "shiny gold".to_string()))
 }
 
 #[cfg(test)]

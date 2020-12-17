@@ -9,8 +9,9 @@ use crate::util::load_file;
 use log::{info, warn, Level}; // trace, debug, info, warn, error
 use env_logger;
 use std::io::Write;
-use std::time::Instant;
+use std::time::{Instant, Duration};
 use rustop::opts;
+use crate::util::RetType;
 
 macro_rules! ifelse {
     ($c:expr, $v:expr, $v1:expr) => {
@@ -18,49 +19,26 @@ macro_rules! ifelse {
     };
 }
 
-fn execute_problem(num: i32, input: Vec<String>, part1: fn(Vec<String>) -> u32, part2: fn(Vec<String>) -> u32) {
-    let start = Instant::now();
-    let result_1 = part1(input.clone());
-    let then_elapsed = start.elapsed();
-    let then = Instant::now();
-    let result_2 = part2(input.clone());
-    let end_elapsed = then.elapsed();
-    info!("Problem {}; Part 1: {} (Runtime: {} μs)", num, result_1, then_elapsed.as_micros());
-    info!("Problem {}; Part 2: {} (Runtime: {} μs)", num, result_2, end_elapsed.as_micros());    
+fn format_time(ts: Duration) -> String {
+    if ts.as_micros() >= 1_000_000 {
+        return format!("{} s", (ts.as_millis() as f32)/1000.0);
+    } else if ts.as_micros() >= 1000 {
+        return format!("{} ms", (ts.as_micros() as f32)/1000.0);
+    } 
+    return format!("{} μs", ts.as_micros());
 }
 
-fn execute_problem_i32(num: i32, input: Vec<String>, part1: fn(Vec<String>) -> i32, part2: fn(Vec<String>) -> i32) {
+fn execute_problem(num: i32, input: Vec<String>, part1: fn(Vec<String>) -> RetType, part2: fn(Vec<String>) -> RetType) {
     let start = Instant::now();
     let result_1 = part1(input.clone());
     let then_elapsed = start.elapsed();
     let then = Instant::now();
     let result_2 = part2(input.clone());
     let end_elapsed = then.elapsed();
-    info!("Problem {}; Part 1: {} (Runtime: {} μs)", num, result_1, then_elapsed.as_micros());
-    info!("Problem {}; Part 2: {} (Runtime: {} μs)", num, result_2, end_elapsed.as_micros());    
+    info!("Problem {}; Part 1: {} (Runtime: {})", num, result_1, format_time(then_elapsed));
+    info!("Problem {}; Part 2: {} (Runtime: {})", num, result_2, format_time(end_elapsed));    
 }
 
-fn execute_problem_u128(num: i32, input: Vec<String>, part1: fn(Vec<String>) -> u128, part2: fn(Vec<String>) -> u128) {
-    let start = Instant::now();
-    let result_1 = part1(input.clone());
-    let then_elapsed = start.elapsed();
-    let then = Instant::now();
-    let result_2 = part2(input.clone());
-    let end_elapsed = then.elapsed();
-    info!("Problem {}; Part 1: {} (Runtime: {} μs)", num, result_1, then_elapsed.as_micros());
-    info!("Problem {}; Part 2: {} (Runtime: {} μs)", num, result_2, end_elapsed.as_micros());    
-}
-
-fn execute_problem_u64(num: i32, input: Vec<String>, part1: fn(Vec<String>) -> u64, part2: fn(Vec<String>) -> u64) {
-    let start = Instant::now();
-    let result_1 = part1(input.clone());
-    let then_elapsed = start.elapsed();
-    let then = Instant::now();
-    let result_2 = part2(input.clone());
-    let end_elapsed = then.elapsed();
-    info!("Problem {}; Part 1: {} (Runtime: {} μs)", num, result_1, then_elapsed.as_micros());
-    info!("Problem {}; Part 2: {} (Runtime: {} μs)", num, result_2, end_elapsed.as_micros());    
-}
 
 fn run_problem(num: i32, input: Vec<String>) {
     match num {
@@ -71,7 +49,7 @@ fn run_problem(num: i32, input: Vec<String>) {
         // Problem 2; Toboggan Password Problems
         2 => execute_problem(num, input, problems::problem02::problem_021, problems::problem02::problem_022),
         // Problem 3; Toboggan Meets Tree
-        3 => execute_problem_u128(num, input, problems::problem03::problem_031, problems::problem03::problem_032),
+        3 => execute_problem(num, input, problems::problem03::problem_031, problems::problem03::problem_032),
         // Problem 4; Dubious Passport Fenangling
         4 => execute_problem(num, input, problems::problem04::problem_041, problems::problem04::problem_042),
         // Problem 5; Boarding Pass Bungaloo
@@ -81,23 +59,23 @@ fn run_problem(num: i32, input: Vec<String>) {
         // Problem 7; Bags are dumb
         7 => execute_problem(num, input, problems::problem07::problem_071, problems::problem07::problem_072),
         // Problem 8; Kids are dumb
-        8 => execute_problem_i32(num, input, problems::problem08::problem_081, problems::problem08::problem_082),
+        8 => execute_problem(num, input, problems::problem08::problem_081, problems::problem08::problem_082),
         // Problem 9; Paperclips are OP
-        9 => execute_problem_u128(num, input, problems::problem09::problem_091, problems::problem09::problem_092),
+        9 => execute_problem(num, input, problems::problem09::problem_091, problems::problem09::problem_092),
         // Problem 10; Adapters are dumb
-        10 => execute_problem_u128(num, input, problems::problem10::problem_101, problems::problem10::problem_102),
+        10 => execute_problem(num, input, problems::problem10::problem_101, problems::problem10::problem_102),
         // Problem 11; People are dumb and these ones act like bacteria cultures
         11 => execute_problem(num, input, problems::problem11::problem_111, problems::problem11::problem_112),
         // Problem 12; Ships are dumb
         12 => execute_problem(num, input, problems::problem12::problem_121, problems::problem12::problem_122),
         // Problem 13; Buses are dumb
-        13 => execute_problem_u128(num, input, problems::problem13::problem_131, problems::problem13::problem_132),
+        13 => execute_problem(num, input, problems::problem13::problem_131, problems::problem13::problem_132),
         // Problem 14; What is this?  I don't even know.
-        14 => execute_problem_u64(num, input, problems::problem14::problem_141, problems::problem14::problem_142),
+        14 => execute_problem(num, input, problems::problem14::problem_141, problems::problem14::problem_142),
         // Problem 15; Number Memory Game
         15 => execute_problem(num, input, problems::problem15::problem_151, problems::problem15::problem_152),
         // Problem 16; Tickets in Another Language
-        16 => execute_problem_u128(num, input, problems::problem16::problem_161, problems::problem16::problem_162),
+        16 => execute_problem(num, input, problems::problem16::problem_161, problems::problem16::problem_162),
         // Problem 17; Game of Life 3D...I mean, 4D
         17 => execute_problem(num, input, problems::problem17::problem_171, problems::problem17::problem_172),
         _ => warn!("Problem number not available.")
@@ -138,7 +116,7 @@ fn main() {
 
     // Parse args
     if args.run_all {
-        for i in 1..9 {
+        for i in 1..18 {
             let filename = format!("aoc2020/inputs/{:02}.txt", i).to_string();
             let input = load_file(filename);
             run_problem(i, input);

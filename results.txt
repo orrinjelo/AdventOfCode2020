@@ -1,0 +1,52 @@
+INFO: ==== Advent of Code 2020 ====
+INFO: Problem 1; Part 1: 63616 (Runtime: 25 μs)
+INFO: Problem 1; Part 2: 67877784 (Runtime: 26.549 ms)
+INFO: =========================
+INFO: Problem 2; Part 1: 378 (Runtime: 87.526 ms)
+INFO: Problem 2; Part 2: 280 (Runtime: 84.974 ms)
+INFO: =========================
+INFO: Problem 3; Part 1: 169 (Runtime: 216 μs)
+INFO: Problem 3; Part 2: 7560370818 (Runtime: 217 μs)
+INFO: =========================
+INFO: Problem 4; Part 1: 222 (Runtime: 23.727 ms)
+INFO: Problem 4; Part 2: 140 (Runtime: 114.871 ms)
+INFO: =========================
+INFO: Problem 5; Part 1: 933 (Runtime: 162 μs)
+INFO: Problem 5; Part 2: 711 (Runtime: 195 μs)
+INFO: =========================
+INFO: Problem 6; Part 1: 6775 (Runtime: 1.276 ms)
+INFO: Problem 6; Part 2: 3356 (Runtime: 1.231 ms)
+INFO: =========================
+INFO: Problem 7; Part 1: 259 (Runtime: 836.883 ms)
+INFO: Problem 7; Part 2: 45018 (Runtime: 584.762 ms)
+INFO: =========================
+INFO: Problem 8; Part 1: 1594 (Runtime: 111 μs)
+INFO: Problem 8; Part 2: 758 (Runtime: 1.869 ms)
+INFO: =========================
+INFO: Problem 9; Part 1: 373803594 (Runtime: 8.256 ms)
+INFO: Problem 9; Part 2: 51152360 (Runtime: 81.139 ms)
+INFO: =========================
+INFO: Problem 10; Part 1: 1998 (Runtime: 7 μs)
+INFO: Problem 10; Part 2: 347250213298688 (Runtime: 8 μs)
+INFO: =========================
+INFO: Problem 11; Part 1: 2243 (Runtime: 13.04 ms)
+INFO: Problem 11; Part 2: 2027 (Runtime: 45.508 ms)
+INFO: =========================
+INFO: Problem 12; Part 1: 904 (Runtime: 41 μs)
+INFO: Problem 12; Part 2: 18747 (Runtime: 149.55 ms)
+INFO: =========================
+INFO: Problem 13; Part 1: 3269 (Runtime: 4 μs)
+INFO: Problem 13; Part 2: 672754131923874 (Runtime: 8 μs)
+INFO: =========================
+INFO: Problem 14; Part 1: 9615006043476 (Runtime: 23.123 ms)
+INFO: Problem 14; Part 2: 4275496544925 (Runtime: 52.285 ms)
+INFO: =========================
+INFO: Problem 15; Part 1: 1618 (Runtime: 315 μs)
+INFO: Problem 15; Part 2: 548531 (Runtime: 3.559 s)
+INFO: =========================
+INFO: Problem 16; Part 1: 25984 (Runtime: 28.997 ms)
+INFO: Problem 16; Part 2: 1265347500049 (Runtime: 31.047 ms)
+INFO: =========================
+INFO: Problem 17; Part 1: 286 (Runtime: 106.393 ms)
+INFO: Problem 17; Part 2: 960 (Runtime: 3.834 s)
+INFO: =========================

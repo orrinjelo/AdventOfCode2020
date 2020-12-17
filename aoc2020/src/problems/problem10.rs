@@ -1,5 +1,6 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use std::cmp::max;
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -60,7 +61,7 @@ fn adapter_partition(mut adapter_list: Vec<u32>) -> u128 {
 ///  first number in the list (after the preamble) which is not the sum of two 
 ///  of the 25 numbers before it. What is the first number that does not have 
 ///  this property?
-pub fn problem_101(input: Vec<String>) -> u128 {
+pub fn problem_101(input: Vec<String>) -> RetType {
     let parsed_input: Vec<u32> = input
         .into_iter()
         .map(|x| x.parse::<u32>().unwrap())
@@ -71,20 +72,20 @@ pub fn problem_101(input: Vec<String>) -> u128 {
 
     debug!("Adapters: {:?}", res);
 
-    res.0 as u128 * res.2 as u128
+    RetType::U128(res.0 as u128 * res.2 as u128)
 }
 
 /// Problem #10, part 2
 /// What is the total number of distinct ways you can arrange the adapters to 
 ///  connect the charging outlet to your device?
-pub fn problem_102(input: Vec<String>) -> u128 {
+pub fn problem_102(input: Vec<String>) -> RetType {
     let parsed_input: Vec<u32> = input
         .into_iter()
         .map(|x| x.parse::<u32>().unwrap())
         .collect()
     ;
 
-    adapter_partition(parsed_input)
+    RetType::U128(adapter_partition(parsed_input))
 }
 
 

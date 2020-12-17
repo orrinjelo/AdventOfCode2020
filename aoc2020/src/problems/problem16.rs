@@ -1,6 +1,7 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use std::collections::HashMap;
 use regex::Regex;
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -162,7 +163,7 @@ fn reduce(m: &mut Vec<Vec<u32>>) {
 }
 
 /// Problem #16, part 1
-pub fn problem_161(input: Vec<String>) -> u128 {
+pub fn problem_161(input: Vec<String>) -> RetType {
     let (tickets, rules) = parse_tickets(input);
 
     let mut error_rate = 0;
@@ -172,11 +173,11 @@ pub fn problem_161(input: Vec<String>) -> u128 {
         }
     }
 
-    error_rate as u128
+    RetType::U128(error_rate as u128)
 }
 
 /// Problem #16, part 2
-pub fn problem_162(input: Vec<String>) -> u128 {
+pub fn problem_162(input: Vec<String>) -> RetType {
     let (tickets, rules) = parse_tickets(input);
 
     let valid_tickets: Vec<Ticket> = tickets
@@ -196,7 +197,7 @@ pub fn problem_162(input: Vec<String>) -> u128 {
         
     }
 
-    ans
+    RetType::U128(ans)
 }
 
 

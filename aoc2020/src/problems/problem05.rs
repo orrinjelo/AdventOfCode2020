@@ -1,4 +1,5 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -63,7 +64,7 @@ impl BoardingPass {
 
 /// Problem #05, Part 1
 /// What is the highest seat ID on a boarding pass?
-pub fn problem_051(input: Vec<String>) -> u32 {
+pub fn problem_051(input: Vec<String>) -> RetType {
     let mut max_id = 0;
     for entry in input {
          let pass = BoardingPass::new(entry);
@@ -72,7 +73,7 @@ pub fn problem_051(input: Vec<String>) -> u32 {
          }
     }
 
-    return max_id;
+    return RetType::U32(max_id);
 }
 
 /// Problem #05, Part 2
@@ -84,7 +85,7 @@ pub fn problem_051(input: Vec<String>) -> u32 {
 ///  will be in your list.
 ///
 /// What is the ID of your seat?
-pub fn problem_052(input: Vec<String>) -> u32 {
+pub fn problem_052(input: Vec<String>) -> RetType {
     let mut pass_vector = Vec::new();
     for entry in input {
         let pass = BoardingPass::new(entry);
@@ -100,12 +101,12 @@ pub fn problem_052(input: Vec<String>) -> u32 {
         if last_id == 0 {
             last_id = pass_id;
         } else if last_id + 1 != pass_id {
-            return last_id + 1;
+            return RetType::U32(last_id + 1);
         } else {
             last_id = pass_id;
         }
     }
-    return 0;
+    return RetType::U32(0);
 }
 
 #[cfg(test)]

@@ -1,4 +1,5 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -56,12 +57,12 @@ fn calculate_fuel(module_mass: u32) -> u32 {
  * @param input_file - filename path to the 
  * @return Returns the numerical result (u32); amount of fuel
  */
-pub fn problem_001(input: Vec<String>) -> u32 {
-    return input
+pub fn problem_001(input: Vec<String>) -> RetType {
+    return RetType::U32(input
         .into_iter()
         .map(|x| x.parse::<u32>().unwrap())
         .map(|x| calculate_fuel_naive(x))
-        .sum()
+        .sum())
     ;
 }
 
@@ -86,12 +87,12 @@ pub fn problem_001(input: Vec<String>) -> u32 {
  * @param input_file - filename path to the 
  * @return Returns the numerical result (u32); amount of fuel
  */
-pub fn problem_002(input: Vec<String>) -> u32 {
-    return input
+pub fn problem_002(input: Vec<String>) -> RetType {
+    return RetType::U32(input
         .into_iter()
         .map(|x| x.parse::<u32>().unwrap())
         .map(|x| calculate_fuel(x))
-        .sum()
+        .sum())
     ;
 }
 

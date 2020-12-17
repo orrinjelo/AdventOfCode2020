@@ -1,5 +1,6 @@
 use regex::Regex;
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -179,8 +180,8 @@ fn count_valid_passports(passports: Vec<Passport>) -> u32 {
  * The automatic passport scanners are slow because they're having trouble 
  *  detecting which passports have all required fields.
  */
-pub fn problem_041(input: Vec<String>) -> u32 {
-    return count_valid_passports(semi_questionable_passport_factory(input, false));
+pub fn problem_041(input: Vec<String>) -> RetType {
+    return RetType::U32(count_valid_passports(semi_questionable_passport_factory(input, false)));
 }
 
 /**
@@ -189,8 +190,8 @@ pub fn problem_041(input: Vec<String>) -> u32 {
  *  security talking about how passports with invalid data are getting 
  *  through. Better add some data validation, quick!
  */
-pub fn problem_042(input: Vec<String>) -> u32 {
-    return count_valid_passports(semi_questionable_passport_factory(input, true));
+pub fn problem_042(input: Vec<String>) -> RetType {
+    return RetType::U32(count_valid_passports(semi_questionable_passport_factory(input, true)));
 }
 
 #[cfg(test)]

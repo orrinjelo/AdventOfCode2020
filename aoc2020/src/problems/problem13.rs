@@ -1,4 +1,5 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -66,7 +67,7 @@ fn chinese_remainder_algo_2_electric_boogaloo(p: &Vec<u128>, m: &Vec<u128>) -> u
 
 
 /// Problem #13, part 1
-pub fn problem_131(input: Vec<String>) -> u128 {
+pub fn problem_131(input: Vec<String>) -> RetType {
     let time: u32 = input[0].parse::<u32>().unwrap();
     let buses_str: Vec<&str> = input[1].split(',').collect();
     let mut buses: Vec<u32> = Vec::new();
@@ -80,11 +81,11 @@ pub fn problem_131(input: Vec<String>) -> u128 {
 
     let next_time = get_next_time(time, &buses);
 
-    ((next_time.0-time) * next_time.1) as u128
+    RetType::U128(((next_time.0-time) * next_time.1) as u128)
 }
 
 /// Problem #13, part 2
-pub fn problem_132(input: Vec<String>) -> u128 {
+pub fn problem_132(input: Vec<String>) -> RetType {
 
     // Build our m and p
     let buses_str: Vec<&str> = input[1].split(',').collect();
@@ -104,7 +105,7 @@ pub fn problem_132(input: Vec<String>) -> u128 {
         i += 1;
     }
 
-    chinese_remainder_algo_2_electric_boogaloo(&p, &m)
+    RetType::U128(chinese_remainder_algo_2_electric_boogaloo(&p, &m))
 }
 
 #[cfg(test)]

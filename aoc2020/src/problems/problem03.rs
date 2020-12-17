@@ -1,4 +1,5 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -96,9 +97,9 @@ impl ArboralLandscape {
  * Due to the local geology, trees in this area only grow on exact integer 
  *  coordinates in a grid.
  */
-pub fn problem_031(input: Vec<String>) -> u128 {
+pub fn problem_031(input: Vec<String>) -> RetType {
     let mut arboral_landscape = ArboralLandscape::new(input);
-    return arboral_landscape.traverse(1,3);
+    return RetType::U128(arboral_landscape.traverse(1,3));
 }
 
 /**
@@ -111,7 +112,7 @@ pub fn problem_031(input: Vec<String>) -> u128 {
  * What do you get if you multiply together the number of trees encountered 
  *  on each of the listed slopes?
  */
-pub fn problem_032(input: Vec<String>) -> u128 {
+pub fn problem_032(input: Vec<String>) -> RetType {
     let mut arboral_landscape = ArboralLandscape::new(input);
     let slope_1_1 = arboral_landscape.traverse(1,1);
     debug!("slope_1_1: {}", slope_1_1);
@@ -124,7 +125,7 @@ pub fn problem_032(input: Vec<String>) -> u128 {
     let slope_2_1 = arboral_landscape.traverse(2,1);
     debug!("slope_2_1: {}", slope_2_1);
     // arboral_landscape.print_n(5);
-    return slope_1_1 * slope_1_3 * slope_1_5 * slope_1_7 * slope_2_1;
+    return RetType::U128(slope_1_1 * slope_1_3 * slope_1_5 * slope_1_7 * slope_2_1);
 }
 
 #[cfg(test)]

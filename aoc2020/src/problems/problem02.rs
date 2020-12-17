@@ -1,5 +1,6 @@
 use regex::Regex;
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -73,7 +74,7 @@ fn is_valid_toboggan_password_tuple(entry: (usize, usize, char, String)) -> bool
  *  corporate policy when that password was set.
  * How many passwords are valid according to their policies?
  */
-pub fn problem_021(input: Vec<String>) -> u32 {
+pub fn problem_021(input: Vec<String>) -> RetType {
     let mut count: u32 = 0;
     for line in input.into_iter() {
         if is_valid_sled_password_tuple(parse_password_line(line)) {
@@ -81,7 +82,7 @@ pub fn problem_021(input: Vec<String>) -> u32 {
         }
     }
 
-    return count;
+    return RetType::U32(count);
 }
 
 /**
@@ -92,7 +93,7 @@ pub fn problem_021(input: Vec<String>) -> u32 {
  *  differently.
  * How many passwords are valid according to the new interpretation of the policies?
  */
-pub fn problem_022(input: Vec<String>) -> u32 {
+pub fn problem_022(input: Vec<String>) -> RetType {
     let mut count: u32 = 0;
     for line in input.into_iter() {
         if is_valid_toboggan_password_tuple(parse_password_line(line)) {
@@ -100,7 +101,7 @@ pub fn problem_022(input: Vec<String>) -> u32 {
         }
     }
 
-    return count;
+    return RetType::U32(count);
 }
 
 #[cfg(test)]

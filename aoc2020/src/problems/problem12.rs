@@ -1,6 +1,7 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use plotly::common::Mode;
 use plotly::{Plot, Scatter};
+use crate::util::RetType;
 
 fn line_and_scatter_plot(x: &Vec<i32>, y: &Vec<i32>) {
     let x_axis: Vec<i32> = x.to_vec();
@@ -210,22 +211,22 @@ impl Ship {
 }
 
 /// Problem #12, part 1
-pub fn problem_121(input: Vec<String>) -> u32 {
+pub fn problem_121(input: Vec<String>) -> RetType {
     let mut ship = Ship::new();
     for line in input {
         ship.parse_instruction_naive(line);
     }
-    ship.manhattan_distance()
+    RetType::U32(ship.manhattan_distance())
 }
 
 /// Problem #12, part 2
-pub fn problem_122(input: Vec<String>) -> u32 {
+pub fn problem_122(input: Vec<String>) -> RetType {
     let mut ship = Ship::new();
     for line in input {
         ship.parse_instruction(line);
     }
     ship.plot();
-    ship.manhattan_distance()
+    RetType::U32(ship.manhattan_distance())
 }
 
 #[cfg(test)]

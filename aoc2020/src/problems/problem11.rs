@@ -1,4 +1,5 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -181,7 +182,7 @@ fn game_of_swedish_chairs(state: &mut Vec<Vec<u32>>) -> bool {
 }
 
 /// Problem #11, part 1
-pub fn problem_111(input: Vec<String>) -> u32 {
+pub fn problem_111(input: Vec<String>) -> RetType {
     let mut parsed_input: Vec<Vec<u32>> = vec![vec![0; input[9].len()]; input.len()];
 
     for i in 0..input.len() {
@@ -206,11 +207,11 @@ pub fn problem_111(input: Vec<String>) -> u32 {
         // print_chairs(&parsed_input);
     }
 
-    count_occupied_chairs(&parsed_input)
+    RetType::U32(count_occupied_chairs(&parsed_input))
 }
 
 /// Problem #11, part 2
-pub fn problem_112(input: Vec<String>) -> u32 {
+pub fn problem_112(input: Vec<String>) -> RetType {
     let mut parsed_input: Vec<Vec<u32>> = vec![vec![0; input[9].len()]; input.len()];
 
     for i in 0..input.len() {
@@ -234,7 +235,7 @@ pub fn problem_112(input: Vec<String>) -> u32 {
     while !game_of_swedish_chairs(&mut parsed_input) {
     }
 
-    count_occupied_chairs(&parsed_input)
+    RetType::U32(count_occupied_chairs(&parsed_input))
 }
 
 

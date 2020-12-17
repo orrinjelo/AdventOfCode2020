@@ -2,6 +2,7 @@ use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use std::collections::HashMap;
 use regex::Regex;
 use itertools::Itertools;
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -171,21 +172,21 @@ impl Computer {
 }
 
 /// Problem #14, part 1
-pub fn problem_141(input: Vec<String>) -> u64 {
+pub fn problem_141(input: Vec<String>) -> RetType {
     let mut comp = Computer::new();
     for line in input {
         comp.execute(line);
     }
-    comp.eval()
+    RetType::U64(comp.eval())
 }
 
 /// Problem #14, part 2
-pub fn problem_142(input: Vec<String>) -> u64 {
+pub fn problem_142(input: Vec<String>) -> RetType {
     let mut comp = Computer::new();
     for line in input {
         comp.execute_v2(line);
     }
-    comp.eval()
+    RetType::U64(comp.eval())
 }
 
 

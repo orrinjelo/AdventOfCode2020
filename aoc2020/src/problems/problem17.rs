@@ -1,4 +1,5 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -32,25 +33,25 @@ fn parse_string_input(input: Vec<String>) -> Vec<Vec<u8>> {
 }
 
 /// Problem #17, part 1
-pub fn problem_171(input: Vec<String>) -> u32 {
+pub fn problem_171(input: Vec<String>) -> RetType {
     let parsed = parse_string_input(input);
     let mut cube = TheCube::new(16);
     cube.set_initial_state(parsed);
     for _ in 0..6 {
         cube.naive_step();
     }
-    cube.count_actives()
+    RetType::U32(cube.count_actives())
 }
 
 /// Problem #17, part 2
-pub fn problem_172(input: Vec<String>) -> u32 {
+pub fn problem_172(input: Vec<String>) -> RetType {
     let parsed = parse_string_input(input);
     let mut cube = TheCube::new(16);
     cube.set_initial_state(parsed);
     for _ in 0..6 {
         cube.hyper_step();
     }
-    cube.count_actives()
+    RetType::U32(cube.count_actives())
 }
 
 #[derive(Clone, Debug, PartialEq)]

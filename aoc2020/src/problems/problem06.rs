@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -64,8 +65,8 @@ fn collect_custom_forms(groups: Vec<String>, intersect: bool) -> u32 {
  *  For each group, count the number of questions to which anyone answered "yes". 
  *   What is the sum of those counts?
  */
-pub fn problem_061(input: Vec<String>) -> u32 {
-    return collect_custom_forms(input, false);
+pub fn problem_061(input: Vec<String>) -> RetType {
+    return RetType::U32(collect_custom_forms(input, false));
 }
 
 /**
@@ -73,8 +74,8 @@ pub fn problem_061(input: Vec<String>) -> u32 {
  *  For each group, count the number of questions to which anyone answered "yes". 
  *   What is the sum of those counts?
  */
-pub fn problem_062(input: Vec<String>) -> u32 {
-    return collect_custom_forms(input, true);
+pub fn problem_062(input: Vec<String>) -> RetType {
+    return RetType::U32(collect_custom_forms(input, true));
 }
 
 

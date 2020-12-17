@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -44,7 +45,7 @@ fn find_sum_subset(input: Vec<u128>, target_idx: usize) -> Vec<u128> {
 ///  first number in the list (after the preamble) which is not the sum of two 
 ///  of the 25 numbers before it. What is the first number that does not have 
 ///  this property?
-pub fn problem_091(input: Vec<String>) -> u128 {
+pub fn problem_091(input: Vec<String>) -> RetType {
     let parsed_input: Vec<u128> = input
         .into_iter()
         .map(|x| x.parse::<u128>().unwrap())
@@ -58,16 +59,16 @@ pub fn problem_091(input: Vec<String>) -> u128 {
             build_sliding_window(parsed_input.clone(), width, i)
         ).contains(&parsed_input[i+width]);
         if !flag {
-            return parsed_input[i+width];
+            return RetType::U128(parsed_input[i+width]);
         }
     }
 
-    0u128
+    RetType::U128(0u128)
 }
 
 /// Problem #09, part 2
 /// What is the encryption weakness in your XMAS-encrypted list of numbers?
-pub fn problem_092(input: Vec<String>) -> u128 {
+pub fn problem_092(input: Vec<String>) -> RetType {
     let parsed_input: Vec<u128> = input
         .into_iter()
         .map(|x| x.parse::<u128>().unwrap())
@@ -84,11 +85,11 @@ pub fn problem_092(input: Vec<String>) -> u128 {
             let res = find_sum_subset(parsed_input.clone(), i+width);
             let min_val = res.iter().min().unwrap();
             let max_val = res.iter().max().unwrap();
-            return min_val + max_val;
+            return RetType::U128(min_val + max_val);
         }
     }
 
-    0u128
+    RetType::U128(0u128)
 }
 
 

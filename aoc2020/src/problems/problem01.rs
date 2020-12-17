@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
+use crate::util::RetType;
 
 #[allow(dead_code)]
 fn _get_rid_of_log_unused_import_warnings() {
@@ -48,7 +49,7 @@ fn find_sum_equal_to(input_vector: Vec<u32>, num_combo: usize, target_value: u32
  * Specifically, they need you to find the two entries that sum to 2020 and 
  *  then multiply those two numbers together.
  */
-pub fn problem_011(input: Vec<String>) -> u32 {
+pub fn problem_011(input: Vec<String>) -> RetType {
     let parsed_input: Vec<u32> = input
         .into_iter()
         .map(|x| x.parse::<u32>().unwrap())
@@ -56,7 +57,7 @@ pub fn problem_011(input: Vec<String>) -> u32 {
     ;
     let entry = naive_find_sum_equal_to(parsed_input, 2020).unwrap();
     let result = entry.0 * entry.1;
-    return result;
+    return RetType::U32(result);
 }
 
 /**
@@ -66,13 +67,13 @@ pub fn problem_011(input: Vec<String>) -> u32 {
  *  They offer you a second one if you can find three numbers in your 
  *  expense report that meet the same criteria.
  */
-pub fn problem_012(input: Vec<String>) -> u32 {
+pub fn problem_012(input: Vec<String>) -> RetType {
     let parsed_input: Vec<u32> = input
         .into_iter()
         .map(|x| x.parse::<u32>().unwrap())
         .collect()
     ;
-    return find_sum_equal_to(parsed_input, 3, 2020).unwrap();
+    return RetType::U32(find_sum_equal_to(parsed_input, 3, 2020).unwrap());
 }
 
 #[cfg(test)]

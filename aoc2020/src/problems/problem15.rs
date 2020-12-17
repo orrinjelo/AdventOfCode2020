@@ -1,5 +1,6 @@
 use log::{trace, debug, info, warn, error}; // trace, debug, info, warn, error
 use std::collections::HashMap;
+use crate::util::RetType;
 
 use plotly::common::Mode;
 use plotly::{Plot, Scatter};
@@ -110,21 +111,21 @@ fn ram_memory_game(start_v: Vec<u32>, stop: u32) -> u32 {
 }
 
 /// Problem #15, part 1
-pub fn problem_151(input: Vec<String>) -> u32 {
+pub fn problem_151(input: Vec<String>) -> RetType {
     let start_v: Vec<u32> = input.last().unwrap().split(',')
                        .map(|x| x.parse::<u32>().unwrap())
                        .collect();
 
-    memory_game(start_v, 2020, false)
+    RetType::U32(memory_game(start_v, 2020, false))
 }
 
 /// Problem #15, part 2
-pub fn problem_152(input: Vec<String>) -> u32 {
+pub fn problem_152(input: Vec<String>) -> RetType {
     let start_v: Vec<u32> = input.last().unwrap().split(',')
                        .map(|x| x.parse::<u32>().unwrap())
                        .collect();
 
-    ram_memory_game(start_v, 30000000)
+    RetType::U32(ram_memory_game(start_v, 30000000))
 }
 
 
