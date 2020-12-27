@@ -221,7 +221,7 @@ mod tests {
 
         let res = problem_071(input);
 
-        assert_eq!(res, 4);
+        assert_eq!(res, RetType::U32(4));
     }
 
     #[test]
